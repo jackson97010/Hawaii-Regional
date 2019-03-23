@@ -17,11 +17,15 @@ public class Robot extends TimedRobot {
   private Timer timer;
   @Override
   public void robotInit() {
-    CameraServer.getInstance().startAutomaticCapture("ground",0);
+    CameraServer.getInstance().startAutomaticCapture("Ground",0);
+    CameraServer.getInstance().startAutomaticCapture("Front", 1);
+    CameraServer.getInstance().startAutomaticCapture("Defand",2);
+
     Chassis.Init();
     Panel.Init();
     Stick.Init();
     Ramp.Init();
+
     com = new Compressor();
     timer = new Timer();
   }
@@ -32,6 +36,13 @@ public class Robot extends TimedRobot {
     Panel.autoInit();
     timer.reset();
     timer.start();
+    
+    if(timer.get() < 15.0){
+      com.start();
+    }
+    else {
+      com.stop();
+    }
   }
 
   @Override
@@ -40,6 +51,17 @@ public class Robot extends TimedRobot {
     Ramp.Periodic();
     Stick.telop();
     Panel.autoPeriodic();
+    Chassis.tankDrive();
+  }
+  @Override
+  public void teleopInit(){
+
+  }
+  @Override
+  public void teleopPeriodic(){
+    Ramp.Periodic();
+    Stick.telop();
+    Panel.teleoP();
     Chassis.tankDrive();
   }
 
